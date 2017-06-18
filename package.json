@@ -1,0 +1,21 @@
+{
+  "name": "rtsp-motionjpeg",
+  "version": "0.0.1",
+  "author": "fajarlabs <fajarrdp@gmail.com>",
+  "description": "rtsp streaming using ffmpeg",
+  "main": "lib/rtsp-ffmpeg.js",
+  "keywords": [
+    "rtsp",
+    "ffmpeg",
+    "mjpeg",
+    "motionjpeg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fajarlabs/rtsp-motionjpeg.git"
+  },
+  "devDependencies": {
+    "socket.io": "^1.4",
+    "express": "4"
+  }
+}
