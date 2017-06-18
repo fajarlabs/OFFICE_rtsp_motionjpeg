@@ -13,24 +13,26 @@ With [socket.io](http://socket.io/) library.
 
 Server:
 ```javascript
-const app = require('express')(),
-  server = require('http').Server(app),
-  io = require('socket.io')(server),
-  rtsp = require('rtsp-ffmpeg');
-server.listen(6147);
-var uri = 'rtsp://r3---sn-5hn7su7k.c.youtube.com/CiILENy73wIaGQkcfGRribM88BMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp',
-  stream = new rtsp.FFMpeg({input: uri});
-io.on('connection', function(socket) {
-  var pipeStream = function(data) {
-    socket.emit('data', data.toString('base64'));
-  };
-  stream.on('data', pipeStream);
-  socket.on('disconnect', function() {
-    stream.removeListener('data', pipeStream);
-  });
-});
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+var cams = [
+{ camera : 'camera1', source : 'rtsp://mpv.cdn3.bigCDN.com:554/bigCDN/definst/mp4:bigbuckbunnyiphone_400.mp4' },
+{ camera : 'camera2', source : 'rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov'}
+].map(function(uri, i) {
+
+	var result = {};
+
+		// Start camera stream
+		result.stream = new rtsp.FFMpeg({input: uri.source, resolution: '320x240', quality: 3});
+		result.stream.on('start', function() {
+			console.log('stream ' + uri.camera + ' started');
+		});
+		result.stream.on('stop', function() {
+			console.log('stream ' + uri.camera + ' stopped');
+		});
+
+		// Camera name
+		result.camera = uri.camera;
+
+		return result;
 });
 ```
 
@@ -53,10 +55,44 @@ For large images resolution or IP cameras example check [/example/server-canvas.
 ## FFMpeg
 
 ```javascript
-  var ffmpeg = new FFMpeg({
-    input: 'rtsp://localhost' // stream uri
-    , rate: 10 // output framerate (optional)
-    , resolution: '640x480' // output resolution in WxH format (optional)
-    , quality: 3 // JPEG compression quality level (optional)
-  });
+$(document).ready(function() {
+
+	//======================================================================/
+
+	// Camera I
+	var cam1 = $("#camera1");
+
+	// auto play
+	cam1.stream("http://localhost:6147/camera1");
+
+	// event pause
+	$('#pause1').on("click",function() {
+		cam1.stop();
+	});
+
+	// event resume
+	$('#resume1').on("click",function() {
+		cam1.resume();
+	});
+
+	//======================================================================/
+
+	// Camera II
+	var cam2 = $("#camera2");
+
+	// auto play
+	cam2.stream("http://localhost:6147/camera2");
+
+	// event pause
+	$('#pause2').on("click",function() {
+		cam2.stop();
+	});
+
+	// event resume
+	$('#resume2').on("click",function() {
+		cam2.resume();
+	});
+
+	//======================================================================/
+});
 ```
