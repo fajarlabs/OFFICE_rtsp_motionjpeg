@@ -38,15 +38,33 @@ var cams = [
 
 Client (index.html):
 ```html
-<img id="img">
-<script src="/socket.io/socket.io.js"></script>
-<script>
-	var img = document.getElementById('img'),
-		socket = io('');
-	socket.on('data', function(data) {
-		img.src = 'data:image/jpeg;base64,' + data;
-	});
-</script>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-6">
+			  	<div class="form-group">
+			   		<label for="camera1">Camera 1</label>
+			   		<img id="camera1" class="thumbnail" style="height:400px;width: 100%">
+			   		<br />
+			   		<button id="pause1" class="btn-primary btn btn-sm">Pause</button>
+			   		<button id="resume1" class="btn-primary btn btn-sm">Resume</button>
+			    </div>
+			</div>
+			<div class="col-xs-6">
+			  	<div class="form-group">
+			   		<label for="camera2">Camera 2</label>
+			   		<img id="camera2" class="thumbnail" style="height:400px;width: 100%">
+			   		<br />
+			   		<button id="pause2" class="btn-primary btn btn-sm">Pause</button>
+			   		<button id="resume2" class="btn-primary btn btn-sm">Resume</button>
+			    </div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+	<script src="stream.jquery.js" ></script>
+
+	<script src="/socket.io/socket.io.js"></script>
 ```
 
 For more detailed example look at [/example/server.js](/example/server.js)
