@@ -16,7 +16,30 @@
 
         socket.on('data', function(data) {
             var bytes = new Uint8Array(data);
-            obj.attr("src",'data:image/jpeg;base64,' + base64ArrayBuffer(bytes));
+            var base64Image = 'data:image/jpeg;base64,' + base64ArrayBuffer(bytes);
+
+            var img = new Image();
+            img.src = base64Image;
+
+            img.onload = function(){
+              var imgSize = {
+                 w: img.width,
+                 h: img.height
+              };
+
+              // remove flicker image broken
+              var threshold_height = 479;
+              var threshold_width = 479;
+
+              if((imgSize.w > threshold_width) && (imgSize.h > threshold_height)) {
+                  obj.attr("src",img.src);
+              }
+              img = null;
+            };
+
+            img.onerror = function() {
+                img = null;
+            };
         });
 
         socketList.push({id : idName, stream : socket });
